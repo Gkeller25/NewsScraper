@@ -1,0 +1,30 @@
+{
+  "name": "NewsScraper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gkeller25/NewsScraper.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Gkeller25/NewsScraper/issues"
+  },
+  "homepage": "https://github.com/Gkeller25/NewsScraper#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cheerio": "^1.0.0-rc.2",
+    "express": "^4.16.3",
+    "express-handlebars": "^3.0.0",
+    "mongojs": "^2.6.0",
+    "mongoose": "^5.2.9",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2"
+  }
+}
