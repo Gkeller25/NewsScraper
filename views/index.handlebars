@@ -1,14 +1,99 @@
-<h1>Task Saver</h1>
+<div class="jumbotron">
+  <h1 class="display-4">Archived Headlines!</h1>
+  <p class="lead">See Archived News</p>
 
-<h3>Save the tasks you need to get to later</h3>
+</div>
+
+<ul class="nav justify-content-center">
+  <li class="nav-item">
+    <a class="nav-link " href="/new">Latest Headlines</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link active" href="/all">Saved Headlines</a>
+  </li>
+</ul>
+ <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Leave Comment</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="noteForm">
+
+            <div class="form-group">
+              <label for="formGroupExampleInput2">Username</label>
+              <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Username">
+            </div>
+            <div class="form-group">
+              <label for="bodyInput">Comment</label>
+              <textarea class="form-control" id="bodyInput" rows="3"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" id="finalize">Save changes</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
 
 
-  {{#each new_Headlines}}
-  
-  	   <p>Title: {{this.title}}</p>
-       <p>Summary: {{this.summary}}</p>
-       <p>Link: {{this.link}}</p>
-      <a> <img src="{{this.image}}"</> </a>
-  	
+  <!-- Button trigger modal -->
+
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel2">Comments</h5>
+          
+        </div>
+        <div class="modal-body" id="commentBody">
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="closer" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="container mb-5">
+   {{#each examples}}
+  <div class="row mt-5">
+
+    <div class="card">
+      <div class="card-header">
+
+        {{this.title}}
+      </div>
+      <div class="card-body">
+        <img src="{{this.image}}">
+        <p class="card-text">{{this.summary}}</p>
+      </div>
+      <div class="card-footer">
+        <a href="{{this.link}}" class="btn btn-primary">See Full Article</a>
+
+        <button type="button" class="btn btn-primary" id="showNote" data-toggle="modal" data-target="#exampleModal2" data-id="{{this._id}}"
+          data-title="{{this.title}}">
+          Show Comments
+        </button>
+        <button type="button" class="btn btn-primary" id="saveNote" data-toggle="modal" data-target="#exampleModal" data-id="{{this._id}}"
+          data-title="{{this.title}}">
+          Leave Comment
+        </button>
+      </div>
+    </div>
+  </div>
+
   {{/each}}
-
+</div>

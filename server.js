@@ -31,82 +31,130 @@ var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines
 mongoose.Promise = Promise;
 mongoose.connect(MONGODB_URI);
 
+request("https://www.ksl.com/", function (err, res, html) {
+    var newHL = [];
+    // Load the html body from request into cheerio
+    var $ = cheerio.load(html);
 
 
-
-app.get("/newest", function (req, res) {
-    // Scrape data from one site and place it into the mongodb db
-    
-    // Make a request for the news section of `ycombinator`
-
-    request("https://www.ksl.com/", function (err, res, html) {
-        var newHL = [];
-        // Load the html body from request into cheerio
-        var $ = cheerio.load(html);
-        //For each element with a "title" class
-        let i = 0;
-
+    app.get("/", function (req, res) {
+        // Find all results from the scrapedData collection in the db
         $(".headline").each(function (i, element) {
             // Save the text and href of each link enclosed in the current element
+            var currentDate = new Date();
+            var postYear = currentDate.getFullYear();
+            var postDate = $(this).find("span.short").text().trim();
+            var postMD = postDate.slice(0, 6);
+            var fullPostDate = postMD + " " + postYear;
+            fullPostDate = fullPostDate.replace(/\s+/g, '-');
+
             var result = {};
             result.title = $(this).find("a").text();
             result.link = $(this).find("a").attr("href");
             result.summary = $(this).find("h5").text();
             result.image = $(this).siblings(".image_box").find("img").attr("data-srcset");
-            
-            // Insert the data in the scrapedData db
-            db.Article.findOne({ title: result.title }, function (err, article) {
-                if (!article) {
-                    //console.log(result);
-                    db.Article.create(result).then(function (dbArticle) {
-                        console.log("DBARTICLE: "+dbArticle);
-                        newHL.push(result);
-                        //res.json(newHL);
-                    }).catch(function (err) {
-                        return res.json(err);
-                    });
-                    console.log("1st LOG: "+newHL);
-                     
-                    
-                   
-                }
-            });
-            console.log("2nd LOG: "+newHL);
-        });
-        console.log("3rd LOG: "+newHL);
-        //for (let i = 0; i < array.length; i++) {
-        //    l;aksdjfals;kdjf
-        //    if(i === array.length){
-        //        res.json(array)
-        //    }
-        //}
-
-        //});
-        //db.scrapedHeadlines.insert({
-        //    title: title,
-        //    summary: summary,
-        //    link: link,
-        //    image: image
-        //}, function(err, inserted) {
-        //  if (err) {
-        //    // Log the error if one is encountered during the query
-        //    console.log(err);
-        //  }
-        //  else {
-        //    // Otherwise, log the inserted data
-        //    console.log(inserted);
-        //  }
-        //});
-        //}
-        // If this found element had both a title and a link
+            result.posted = fullPostDate;
+            db.Article.create(result).then(function (dbArticle) {
+            })
+   
+        })
+        res.render("empty");
 
     });
-    //console.log(newHL);
-    //res.render("index", { new_Headlines: newHL });
 });
 
-// Send a "Scrape Complete" message to the browser
+app.get("/new", function (req, res) {
+    var month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    // Find all results from the scrapedData collection in the db
+    var todayDate = new Date();
+    var todayDay = todayDate.getDate();
+    var todayMonth = todayDate.getMonth();
+    var todayYear = todayDate.getFullYear();
 
+    var today = month[todayMonth] + "-" + todayDay + "-" + todayYear;
+
+    console.log(today);
+    db.Article.find({ posted: today }, function (error, found) {
+        // Throw any errors to the console
+        if (error) {
+            console.log(error);
+        }
+        // If there are no errors, send the data to the browser as json
+        else {
+            console.log(found);
+            res.render("headline", {
+                examples: found
+            })
+        }
+    })
+});
+
+
+app.get("/all", function (req, res) {
+    // Find all results from the scrapedData collection in the db
+    db.Article.find({}, function (error, found) {
+        // Throw any errors to the console
+        if (error) {
+            console.log(error);
+        }
+        // If there are no errors, send the data to the browser as json
+        else {
+            res.render("index", 
+            {examples: found});
+        }
+    });
+});
+// Route for grabbing a specific Article by id, populate it with it's note
+app.get("/article/:id", function(req, res) {
+    // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
+    db.Article.findOne({ _id: req.params.id })
+      // ..and populate all of the notes associated with it
+      .populate("note")
+      .then(function(dbArticle) {
+        // If we were able to successfully find an Article with the given id, send it back to the client
+        res.json(dbArticle);
+      })
+      .catch(function(err) {
+        // If an error occurred, send it to the client
+        res.json(err);
+      });
+  });
+
+  app.delete("/delete/:id", function(req, res) {
+    // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
+    db.Note.findOneAndDelete({ _id: req.params.id })
+      // ..and populate all of the notes associated with it
+      
+      .then(function(dbNote) {
+        // If we were able to successfully find an Article with the given id, send it back to the client
+        res.json(dbNote);
+      })
+      .catch(function(err) {
+        // If an error occurred, send it to the client
+        res.json(err);
+      });
+  });
+
+  // Route for saving/updating an Article's associated Note
+  app.post("/article/:id", function(req, res) {
+    // Create a new note and pass the req.body to the entry
+    db.Note.create(req.body)
+      .then(function(dbNote) {
+        // If a Note was created successfully, find one Article with an `_id` equal to `req.params.id`. Update the Article to be associated with the new Note
+        // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
+        // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
+        return db.Article.findOneAndUpdate({ _id: req.params.id }, { $push: { note: dbNote._id } }, { new: false });
+      })
+      .then(function(dbArticle) {
+        // If we were able to successfully update an Article, send it back to the client
+        
+        res.json(dbArticle);
+      })
+      .catch(function(err) {
+        // If an error occurred, send it to the client
+        res.json(err);
+      });
+  });
 
 
 // Start the server
