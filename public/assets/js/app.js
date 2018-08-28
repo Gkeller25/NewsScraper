@@ -4,6 +4,8 @@ $(document).ready(function () {
         "data-backdrop": 'static'
       });
    
+
+      
     // Whenever someone clicks a p tag
     $(document).on("click", "#showNote", function () {
         var thisId = $(this).attr("data-id");

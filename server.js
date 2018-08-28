@@ -4,7 +4,7 @@ var cheerio = require("cheerio");
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
 var exphbs = require("express-handlebars");
-
+var path = require("path");
 
 var db = require("./models");
 
@@ -62,7 +62,8 @@ mongoose.connect(MONGODB_URI);
         
 
     });
-     res.render("empty");
+    res.sendFile(path.join(__dirname, "./public/home.html"));
+     //res.render("empty");
 });
 
 app.get("/new", function (req, res) {
