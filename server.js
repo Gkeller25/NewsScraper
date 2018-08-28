@@ -32,7 +32,7 @@ mongoose.Promise = Promise;
 mongoose.connect(MONGODB_URI);
 
 request("https://www.ksl.com/", function (err, res, html) {
-    var newHL = [];
+
     // Load the html body from request into cheerio
     var $ = cheerio.load(html);
 
