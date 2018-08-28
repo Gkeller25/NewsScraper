@@ -62,7 +62,7 @@ mongoose.connect(MONGODB_URI);
         
 
     });
-    res.render("empty");
+     res.render("empty");
 });
 
 app.get("/new", function (req, res) {

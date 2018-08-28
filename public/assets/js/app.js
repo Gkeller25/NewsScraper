@@ -61,6 +61,17 @@ $(document).ready(function () {
             })
 
     });
+    $(document).on("click", ".refresh", function () {
+        $.ajax({
+            method: "GET",
+            url: "/"
+        })
+            // With that done, add the note information to the page
+            .then(function (data) {
+                console.log("done");
+            })
+
+    });
     $(document).on("click", "#closer", function () {
         $("#commentCard").remove();
     });
