@@ -83,7 +83,7 @@ $(document).ready(function () {
     console.log(today);
         $.ajax({
             method: "GET",
-            url: "/new/"+today
+            url: "/new"
         })
             // With that done, add the note information to the page
             .then(function (data) {
