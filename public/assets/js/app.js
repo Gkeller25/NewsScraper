@@ -59,19 +59,27 @@ $(document).ready(function () {
             })
     });
 
-    //$(document).on("click", ".delete", function () {
-   //    var thisNoteId = $(this).attr("data-id");
-   //    $.ajax({
-   //        method: "DELETE",
-   //        url: "/delete/" + thisNoteId
-   //    })
-   //        // With that done, add the note information to the page
-   //        .then(function (data) {
-   //            console.log(data);
-   //        })
+    $(document).on("click", ".delete", function () {
+      var thisNoteId = $(this).attr("data-id");
+      $.ajax({
+          method: "DELETE",
+          url: "/delete/" + thisNoteId
+      })
+          // With that done, add the note information to the page
+          .then(function (data) {
+              console.log(data);
+          })
 
-   //});
+   });
     $(document).on("click", ".refresh", function () {
+        var todayDate = new Date();
+    var todayDay = todayDate.getDate();
+    var todayMonth = todayDate.getMonth();
+    var todayYear = todayDate.getFullYear();
+
+    var today = month[todayMonth] + "-" + todayDay + "-" + todayYear;
+
+    console.log(today);
         $.ajax({
             method: "GET",
             url: "/new"
