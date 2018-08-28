@@ -72,6 +72,7 @@ $(document).ready(function () {
 
    });
     $(document).on("click", ".refresh", function () {
+        var month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         var todayDate = new Date();
     var todayDay = todayDate.getDate();
     var todayMonth = todayDate.getMonth();
