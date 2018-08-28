@@ -66,18 +66,18 @@ mongoose.connect(MONGODB_URI);
      //res.render("empty");
 });
 
-app.get("/new", function (req, res) {
-    var month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+app.get("/new/:date", function (req, res) {
+    //var month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     // Find all results from the scrapedData collection in the db
-    var todayDate = new Date();
-    var todayDay = todayDate.getDate();
-    var todayMonth = todayDate.getMonth();
-    var todayYear = todayDate.getFullYear();
+    //var todayDate = new Date();
+    //var todayDay = todayDate.getDate();
+    //var todayMonth = todayDate.getMonth();
+    //var todayYear = todayDate.getFullYear();
 
-    var today = month[todayMonth] + "-" + todayDay + "-" + todayYear;
+    //var today = month[todayMonth] + "-" + todayDay + "-" + todayYear;
 
-    console.log(today);
-    db.Article.find({ posted: today }, function (error, found) {
+    //console.log(today);
+    db.Article.find({ posted: req.params.date }, function (error, found) {
         // Throw any errors to the console
         if (error) {
             console.log(error);
