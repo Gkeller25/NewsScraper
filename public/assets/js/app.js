@@ -2,10 +2,18 @@ $(document).ready(function () {
     $("#exampleModal2").attr({
         "data-keyboard": false,
         "data-backdrop": 'static'
-      });
-   
+    });
+    $(document).on("click", "#showNote", function () {
+        $.ajax({
+            method: "GET",
+            url: "/article/" + thisId
+        })
+            // With that done, add the note information to the page
+            .then(function (data) {
 
-      
+            })
+    });
+
     // Whenever someone clicks a p tag
     $(document).on("click", "#showNote", function () {
         var thisId = $(this).attr("data-id");
@@ -14,9 +22,9 @@ $(document).ready(function () {
             "data-id": thisId,
             "data-title": thisTitle
         });
-       
-            
-        
+
+
+
         $.ajax({
             method: "GET",
             url: "/article/" + thisId
@@ -51,22 +59,22 @@ $(document).ready(function () {
             })
     });
 
-    $(document).on("click", ".delete", function () {
-        var thisNoteId = $(this).attr("data-id");
-        $.ajax({
-            method: "DELETE",
-            url: "/delete/" + thisNoteId
-        })
-            // With that done, add the note information to the page
-            .then(function (data) {
-                console.log(data);
-            })
+    //$(document).on("click", ".delete", function () {
+   //    var thisNoteId = $(this).attr("data-id");
+   //    $.ajax({
+   //        method: "DELETE",
+   //        url: "/delete/" + thisNoteId
+   //    })
+   //        // With that done, add the note information to the page
+   //        .then(function (data) {
+   //            console.log(data);
+   //        })
 
-    });
+   //});
     $(document).on("click", ".refresh", function () {
         $.ajax({
             method: "GET",
-            url: "/"
+            url: "/new"
         })
             // With that done, add the note information to the page
             .then(function (data) {
